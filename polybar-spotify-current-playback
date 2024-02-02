@@ -1,0 +1,15 @@
+#!/bin/bash
+
+zscroll --length 60 \
+	--delay 0.2 \
+	--eval-in-shell true \
+	--match-command "spotify_player get key playback | jq -r .is_playing" \
+	--match-text "false" "--before-text '⏸ '" \
+	--match-text "null" "--before-text ''" \
+	--match-text "true" "--before-text '⏵ '" \
+	--scroll-padding " | " \
+	--update-check true \
+	--update-interval 1 \
+	"spotify_player get key playback | jq -r 'if(.is_playing==null) then(empty) else(.item.artists|=map(.name)|\"\\(.item.name) - \" + \"\\(.item.artists|join(\", \"))\") end'" &
+
+wait
